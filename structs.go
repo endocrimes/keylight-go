@@ -2,7 +2,10 @@ package keylight
 
 import "context"
 
-type KeyLight struct {
+// Device represents an actual KeyLight. They can be found using a Discovery
+// interface, or created with a given DNSAddr and Port when running in a static
+// environment.
+type Device struct {
 	Name    string
 	DNSAddr string
 	Port    int
@@ -48,11 +51,14 @@ func (l *Light) Copy() *Light {
 	return nl
 }
 
+// LightGroup represents a set of configurable lights within a given KeyLight
+// device.
 type LightGroup struct {
 	Count  int      `json:"numberOfLights"`
 	Lights []*Light `json:"lights"`
 }
 
+// Copy returns a new deep copy of a LightGroup.
 func (o *LightGroup) Copy() *LightGroup {
 	no := new(LightGroup)
 	*no = *o
@@ -79,7 +85,7 @@ type Discovery interface {
 	//       entities if they expose the `_elg._tcp` service over mdns.
 	//       Use KeyLight.FetchDeviceInfo(...) to determine the accessory info
 	//       if you run into problems.
-	ResultsCh() <-chan *KeyLight
+	ResultsCh() <-chan *Device
 }
 
 // NewDiscovery returns a new default Disocvery implemetnation. This is currently

@@ -31,7 +31,7 @@ func main() {
 	firstLight := <-discovery.ResultsCh()
 	discoveryShutdownFn()
 
-	info, err := firstLight.FetchDeviceInfo(context.TODO())
+	info, err := firstLight.FetchDeviceInfo(context.Background())
 	if err != nil {
 		log.Fatalf("failed to retrieve light info, err: %v", err)
 	}
@@ -40,7 +40,7 @@ func main() {
 
 	log.Printf("Flashing light: %s", info.DisplayName)
 
-	currentOpts, err := firstLight.FetchLightGroup(context.TODO())
+	currentOpts, err := firstLight.FetchLightGroup(context.Background())
 	if err != nil {
 		log.Fatalf("failed to retrieve light options, err: %v", err)
 	}
@@ -51,14 +51,14 @@ func main() {
 		l.Brightness = 40
 	})
 
-	_, err = firstLight.UpdateLightGroup(context.TODO(), newOpts)
+	_, err = firstLight.UpdateLightGroup(context.Background(), newOpts)
 	if err != nil {
 		log.Fatalf("failed to update light options, err: %v", err)
 	}
 
 	time.Sleep(3 * time.Second)
 
-	_, err = firstLight.UpdateLightGroup(context.TODO(), currentOpts)
+	_, err = firstLight.UpdateLightGroup(context.Background(), currentOpts)
 	if err != nil {
 		log.Fatalf("failed to reset light options, err: %v", err)
 	}

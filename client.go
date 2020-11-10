@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func (k *KeyLight) httpGet(ctx context.Context, path string, target interface{}) error {
+func (k *Device) httpGet(ctx context.Context, path string, target interface{}) error {
 	url := fmt.Sprintf("http://%s:%d/%s", k.DNSAddr, k.Port, path)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	client := &http.Client{}
@@ -21,7 +21,7 @@ func (k *KeyLight) httpGet(ctx context.Context, path string, target interface{})
 	return json.NewDecoder(resp.Body).Decode(target)
 }
 
-func (k *KeyLight) httpPut(ctx context.Context, path string, body interface{}, target interface{}) error {
+func (k *Device) httpPut(ctx context.Context, path string, body interface{}, target interface{}) error {
 	buf := new(bytes.Buffer)
 	err := json.NewEncoder(buf).Encode(body)
 	if err != nil {
@@ -41,14 +41,14 @@ func (k *KeyLight) httpPut(ctx context.Context, path string, body interface{}, t
 }
 
 // FetchSettings allows you to retrieve general device settings.
-func (k *KeyLight) FetchSettings(ctx context.Context) (*DeviceSettings, error) {
+func (k *Device) FetchSettings(ctx context.Context) (*DeviceSettings, error) {
 	s := &DeviceSettings{}
 	err := k.httpGet(ctx, "elgato/lights/settings", s)
 	return s, err
 }
 
 // FetchDeviceInfo returns metadata for the accessory.
-func (k *KeyLight) FetchDeviceInfo(ctx context.Context) (*DeviceInfo, error) {
+func (k *Device) FetchDeviceInfo(ctx context.Context) (*DeviceInfo, error) {
 	i := &DeviceInfo{}
 	err := k.httpGet(ctx, "elgato/accessory-info", i)
 	return i, err
@@ -57,7 +57,7 @@ func (k *KeyLight) FetchDeviceInfo(ctx context.Context) (*DeviceInfo, error) {
 // FetchLightGroup returns all of the individual lights that are owned by an
 // accessory. This in conjunction with UpdateLightGroup will allow you to
 // control your lights.
-func (k *KeyLight) FetchLightGroup(ctx context.Context) (*LightGroup, error) {
+func (k *Device) FetchLightGroup(ctx context.Context) (*LightGroup, error) {
 	o := &LightGroup{Lights: make([]*Light, 0)}
 	err := k.httpGet(ctx, "elgato/lights", o)
 	return o, err
@@ -65,7 +65,7 @@ func (k *KeyLight) FetchLightGroup(ctx context.Context) (*LightGroup, error) {
 
 // UpdateLightGroup allows you to update the settings for individual lights
 // in an accessory. It returns the updated options.
-func (k *KeyLight) UpdateLightGroup(ctx context.Context, newOptions *LightGroup) (*LightGroup, error) {
+func (k *Device) UpdateLightGroup(ctx context.Context, newOptions *LightGroup) (*LightGroup, error) {
 	o := &LightGroup{Lights: make([]*Light, 0)}
 	err := k.httpPut(ctx, "elgato/lights", newOptions, o)
 	return o, err
