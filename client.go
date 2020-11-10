@@ -41,8 +41,8 @@ func (k *KeyLight) httpPut(ctx context.Context, path string, body interface{}, t
 }
 
 // FetchSettings allows you to retrieve general device settings.
-func (k *KeyLight) FetchSettings(ctx context.Context) (*KeyLightSettings, error) {
-	s := &KeyLightSettings{}
+func (k *KeyLight) FetchSettings(ctx context.Context) (*DeviceSettings, error) {
+	s := &DeviceSettings{}
 	err := k.httpGet(ctx, "elgato/lights/settings", s)
 	return s, err
 }

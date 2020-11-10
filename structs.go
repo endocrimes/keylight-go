@@ -8,7 +8,9 @@ type KeyLight struct {
 	Port    int
 }
 
-type KeyLightSettings struct {
+// DeviceSettings represents the data returned and accepted by a KeyLight for
+// configuring its behaviour.
+type DeviceSettings struct {
 	PowerOnBehavior       int `json:"powerOnBehavior"`
 	PowerOnBrightness     int `json:"powerOnBrightness"`
 	PowerOnTemperature    int `json:"powerOnTemperature"`
