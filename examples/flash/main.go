@@ -31,7 +31,7 @@ func main() {
 	firstLight := <-discovery.ResultsCh()
 	discoveryShutdownFn()
 
-	info, err := firstLight.FetchAccessoryInfo(context.TODO())
+	info, err := firstLight.FetchDeviceInfo(context.TODO())
 	if err != nil {
 		log.Fatalf("failed to retrieve light info, err: %v", err)
 	}

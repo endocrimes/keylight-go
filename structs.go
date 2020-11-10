@@ -19,7 +19,7 @@ type DeviceSettings struct {
 	ColorChangeDurationMs int `json:"colorChangeDurationMs"`
 }
 
-type AccessoryInfo struct {
+type DeviceInfo struct {
 	ProductName         string   `json:"productName"`
 	HardwareBoardType   int      `json:"hardwareBoardType"`
 	FirmwareBuildNumber int      `json:"firmwareBuildNumber"`
@@ -68,7 +68,7 @@ type Discovery interface {
 	// ResultsCh returns a channel of discovered Key Lights.
 	// NOTE: It currently does not filter the results so may return non key light
 	//       entities if they expose the `_elg._tcp` service over mdns.
-	//       Use KeyLight.FetchAccessoryInfo(...) to determine the accessory info
+	//       Use KeyLight.FetchDeviceInfo(...) to determine the accessory info
 	//       if you run into problems.
 	ResultsCh() <-chan *KeyLight
 }

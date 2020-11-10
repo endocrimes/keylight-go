@@ -47,9 +47,9 @@ func (k *KeyLight) FetchSettings(ctx context.Context) (*DeviceSettings, error) {
 	return s, err
 }
 
-// FetchAccessoryInfo returns metadata for the accessory.
-func (k *KeyLight) FetchAccessoryInfo(ctx context.Context) (*AccessoryInfo, error) {
-	i := &AccessoryInfo{}
+// FetchDeviceInfo returns metadata for the accessory.
+func (k *KeyLight) FetchDeviceInfo(ctx context.Context) (*DeviceInfo, error) {
+	i := &DeviceInfo{}
 	err := k.httpGet(ctx, "elgato/accessory-info", i)
 	return i, err
 }
