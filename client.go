@@ -54,19 +54,19 @@ func (k *KeyLight) FetchDeviceInfo(ctx context.Context) (*DeviceInfo, error) {
 	return i, err
 }
 
-// FetchLightOptions returns all of the individual lights that are owned by an
-// accessory. This in conjunction with UpdateLightOptions will allow you to
+// FetchLightGroup returns all of the individual lights that are owned by an
+// accessory. This in conjunction with UpdateLightGroup will allow you to
 // control your lights.
-func (k *KeyLight) FetchLightOptions(ctx context.Context) (*KeyLightOptions, error) {
-	o := &KeyLightOptions{Lights: make([]*KeyLightLight, 0)}
+func (k *KeyLight) FetchLightGroup(ctx context.Context) (*LightGroup, error) {
+	o := &LightGroup{Lights: make([]*Light, 0)}
 	err := k.httpGet(ctx, "elgato/lights", o)
 	return o, err
 }
 
-// UpdateLightOptions allows you to update the settings for individual lights
+// UpdateLightGroup allows you to update the settings for individual lights
 // in an accessory. It returns the updated options.
-func (k *KeyLight) UpdateLightOptions(ctx context.Context, newOptions *KeyLightOptions) (*KeyLightOptions, error) {
-	o := &KeyLightOptions{Lights: make([]*KeyLightLight, 0)}
+func (k *KeyLight) UpdateLightGroup(ctx context.Context, newOptions *LightGroup) (*LightGroup, error) {
+	o := &LightGroup{Lights: make([]*Light, 0)}
 	err := k.httpPut(ctx, "elgato/lights", newOptions, o)
 	return o, err
 }

@@ -19,6 +19,10 @@ type DeviceSettings struct {
 	ColorChangeDurationMs int `json:"colorChangeDurationMs"`
 }
 
+// DeviceInfo returns read-only information about a given Elgato device.
+// This is currently only supported by keylight devices but as other devices
+// may expose _elg.tcp services, it may also be suppported by other products
+// in the future.
 type DeviceInfo struct {
 	ProductName         string   `json:"productName"`
 	HardwareBoardType   int      `json:"hardwareBoardType"`
@@ -29,28 +33,31 @@ type DeviceInfo struct {
 	Features            []string `json:"features"`
 }
 
-type KeyLightLight struct {
+// Light is the struct that encapsulates the state of a KeyLight's individual
+// light. Most keylight devices currently only have one 'Light'.
+type Light struct {
 	On          int `json:"on"`
 	Brightness  int `json:"brightness"`
 	Temperature int `json:"temperature"`
 }
 
-func (l *KeyLightLight) Copy() *KeyLightLight {
-	nl := new(KeyLightLight)
+// Copy returns a new copy of a light.
+func (l *Light) Copy() *Light {
+	nl := new(Light)
 	*nl = *l
 	return nl
 }
 
-type KeyLightOptions struct {
-	Count  int              `json:"numberOfLights"`
-	Lights []*KeyLightLight `json:"lights"`
+type LightGroup struct {
+	Count  int      `json:"numberOfLights"`
+	Lights []*Light `json:"lights"`
 }
 
-func (o *KeyLightOptions) Copy() *KeyLightOptions {
-	no := new(KeyLightOptions)
+func (o *LightGroup) Copy() *LightGroup {
+	no := new(LightGroup)
 	*no = *o
 
-	lights := make([]*KeyLightLight, len(o.Lights))
+	lights := make([]*Light, len(o.Lights))
 	for idx, light := range o.Lights {
 		lights[idx] = light.Copy()
 	}
@@ -60,6 +67,8 @@ func (o *KeyLightOptions) Copy() *KeyLightOptions {
 	return no
 }
 
+// Discovery is the interface that is exposed to discover KeyLight devices.
+// The default implementation discovers lights via Bonjour.
 type Discovery interface {
 	// Run will start the given discovery client and run syncronously until the
 	// provided context is shutdown.
@@ -73,6 +82,8 @@ type Discovery interface {
 	ResultsCh() <-chan *KeyLight
 }
 
+// NewDiscovery returns a new default Disocvery implemetnation. This is currently
+// backed by Bonjour.
 func NewDiscovery() (Discovery, error) {
 	return newBonjourDiscovery()
 }
