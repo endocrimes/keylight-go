@@ -11,6 +11,9 @@ import (
 func (k *Device) httpGet(ctx context.Context, path string, target interface{}) error {
 	url := fmt.Sprintf("http://%s:%d/%s", k.DNSAddr, k.Port, path)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return err
+	}
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -30,6 +33,9 @@ func (k *Device) httpPut(ctx context.Context, path string, body interface{}, tar
 
 	url := fmt.Sprintf("http://%s:%d/%s", k.DNSAddr, k.Port, path)
 	req, err := http.NewRequestWithContext(ctx, "PUT", url, buf)
+	if err != nil {
+		return err
+	}
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
