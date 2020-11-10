@@ -8,7 +8,7 @@ import (
 	"github.com/endocrimes/keylight-go"
 )
 
-func mapLights(lights []*keylight.KeyLightLight, f func(*keylight.KeyLightLight)) {
+func mapLights(lights []*keylight.Light, f func(*keylight.Light)) {
 	for _, light := range lights {
 		f(light)
 	}
@@ -31,7 +31,7 @@ func main() {
 	firstLight := <-discovery.ResultsCh()
 	discoveryShutdownFn()
 
-	info, err := firstLight.FetchAccessoryInfo(context.TODO())
+	info, err := firstLight.FetchDeviceInfo(context.Background())
 	if err != nil {
 		log.Fatalf("failed to retrieve light info, err: %v", err)
 	}
@@ -40,25 +40,25 @@ func main() {
 
 	log.Printf("Flashing light: %s", info.DisplayName)
 
-	currentOpts, err := firstLight.FetchLightOptions(context.TODO())
+	currentOpts, err := firstLight.FetchLightGroup(context.Background())
 	if err != nil {
 		log.Fatalf("failed to retrieve light options, err: %v", err)
 	}
 
 	newOpts := currentOpts.Copy()
-	mapLights(newOpts.Lights, func(l *keylight.KeyLightLight) {
+	mapLights(newOpts.Lights, func(l *keylight.Light) {
 		l.On = 1
 		l.Brightness = 40
 	})
 
-	_, err = firstLight.UpdateLightOptions(context.TODO(), newOpts)
+	_, err = firstLight.UpdateLightGroup(context.Background(), newOpts)
 	if err != nil {
 		log.Fatalf("failed to update light options, err: %v", err)
 	}
 
 	time.Sleep(3 * time.Second)
 
-	_, err = firstLight.UpdateLightOptions(context.TODO(), currentOpts)
+	_, err = firstLight.UpdateLightGroup(context.Background(), currentOpts)
 	if err != nil {
 		log.Fatalf("failed to reset light options, err: %v", err)
 	}
